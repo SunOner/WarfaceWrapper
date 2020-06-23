@@ -13,9 +13,13 @@ namespace WarfaceAuth
 {
     public class Auth
     {
+        Process_Start Start = new Process_Start();
         Debug Debug = new Debug();
+        Program Program = new Program();
         static public string login = "";
         static public string password = "";
+        static public string server = "";
+        static public string shardid = "";
         static string ChannelId = "35";
 
         static CookieContainer authInfo;
@@ -312,14 +316,18 @@ namespace WarfaceAuth
 
             Stream stream = response.GetResponseStream();
             StreamReader reader = new StreamReader(stream);
-            //Console.WriteLine(reader.ReadToEnd());
             string temp_page = reader.ReadToEnd();
             Match m1 = Regex.Match(temp_page, "Code=\"([\\s\\S]+?)\".GameAccount=\"([\\s\\S]+?)\".PersId=\"([\\s\\S]+?)\".MRACToken=\"([\\s\\S]+?)\"");
             string token = m1.Groups[1].Value;
             string uid = m1.Groups[2].Value;
             string PersId = m1.Groups[3].Value;
             string MRACToken = m1.Groups[4].Value;
-            Console.WriteLine($"{m1.Groups[1].Value} {m1.Groups[2].Value} {m1.Groups[3].Value} {m1.Groups[4].Value}");
+            Debug.Write_debug("Responce start params",$"Token:{m1.Groups[1].Value}\nUid:{m1.Groups[2].Value}\nPersId:{m1.Groups[3].Value}\nMRACToken:{m1.Groups[4].Value}\n");
+            if(Program.Start_game == true)
+            {
+                Start.Start_Game(uid,token,shardid,server,Program.exe_dir);
+            }
+
         }
         public static CookieCollection GetAllCookies(CookieContainer cookieJar)
         {
