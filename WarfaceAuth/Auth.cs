@@ -165,38 +165,45 @@ namespace WarfaceAuth
         }
         public void Login_mygames() //(Directly)
         {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://auth-ac.my.games/auth");
-            req.Method = "POST";
-            req.UserAgent = "Downloader/15740";
-            req.Referer = "https://api.my.games/gamecenter/login/?lang=en_US";
-            req.Headers.Add("Origin: https://api.my.games");
-            req.ContentType = "application/x-www-form-urlencoded";
-            req.AllowAutoRedirect = true;
-            req.CookieContainer = authInfo;
-            byte[] SomeBytes = null;
-            string FormParams = $"email={login}" +
-                                $"&password={password}" +
-                                $"&continue=https://auth-ac.my.games/sdc?from=https%3A%2F%2Fapi.my.games%2Fgamecenter%2Flogin_finished%2F&failure=https://api.my.games/gamecenter/login/&nosavelogin=0";
-            SomeBytes = Encoding.GetEncoding(1251).GetBytes(FormParams);
-            req.ContentLength = SomeBytes.Length;
-            Stream newStream = req.GetRequestStream();
-            newStream.Write(SomeBytes, 0, SomeBytes.Length);
-            newStream.Close();
-            HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-            Debug.Write_debug("Login_mygames", response.Headers.ToString());
-            Cookie_party = GetAllCookies(authInfo);
-            foreach (Cookie cookie in Cookie_party)
+            try
             {
-                Cookie_party_helper += string.Join(".", "," + cookie.ToString()); //BRUH
-                Debug.Write_debug("Debug cookie...", cookie.ToString());
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://auth-ac.my.games/auth");
+                req.Method = "POST";
+                req.UserAgent = "Downloader/15740";
+                req.Referer = "https://api.my.games/gamecenter/login/?lang=en_US";
+                req.Headers.Add("Origin: https://api.my.games");
+                req.ContentType = "application/x-www-form-urlencoded";
+                req.AllowAutoRedirect = true;
+                req.CookieContainer = authInfo;
+                byte[] SomeBytes = null;
+                string FormParams = $"email={login}" +
+                                    $"&password={password}" +
+                                    $"&continue=https://auth-ac.my.games/sdc?from=https%3A%2F%2Fapi.my.games%2Fgamecenter%2Flogin_finished%2F&failure=https://api.my.games/gamecenter/login/&nosavelogin=0";
+                SomeBytes = Encoding.GetEncoding(1251).GetBytes(FormParams);
+                req.ContentLength = SomeBytes.Length;
+                Stream newStream = req.GetRequestStream();
+                newStream.Write(SomeBytes, 0, SomeBytes.Length);
+                newStream.Close();
+                HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+                Debug.Write_debug("Login_mygames", response.Headers.ToString());
+                Cookie_party = GetAllCookies(authInfo);
+                foreach (Cookie cookie in Cookie_party)
+                {
+                    Cookie_party_helper += string.Join(".", "," + cookie.ToString()); //BRUH
+                    Debug.Write_debug("Debug cookie...", cookie.ToString());
+                }
+
+                Match regex_cookie_mc = Regex.Match(Cookie_party_helper, "mc=([\\s\\S]+?),");
+                Match regex_cookie_sdcs = Regex.Match(Cookie_party_helper, "sdcs=([\\s\\S]+?),");
+                Cookie_mc = regex_cookie_mc.Groups[1].Value;
+                Cookie_sdcs_2 = regex_cookie_sdcs.Groups[1].Value;
+                Get_session_key();
+            }
+            catch
+            {
+                Get_Eula();
             }
 
-            Match regex_cookie_mc = Regex.Match(Cookie_party_helper, "mc=([\\s\\S]+?),");
-            Match regex_cookie_sdcs = Regex.Match(Cookie_party_helper, "sdcs=([\\s\\S]+?),");
-            Cookie_mc = regex_cookie_mc.Groups[1].Value;
-            Cookie_sdcs_2 = regex_cookie_sdcs.Groups[1].Value;
-            //Get_Eula(); // TODO Eula parse ERROR
-            Get_session_key();
         }
 
         public void Get_Eula()
