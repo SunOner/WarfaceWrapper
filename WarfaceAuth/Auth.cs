@@ -113,7 +113,7 @@ namespace WarfaceAuth
             }
             else
             {
-                Console.WriteLine("Bad login ar password");
+                Console.WriteLine("Bad login or password");
                 Console.ReadLine();
                 Environment.Exit(1);
             }

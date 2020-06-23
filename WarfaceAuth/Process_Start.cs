@@ -44,10 +44,10 @@ namespace WarfaceAuth
                 $" --id {uid}" +
                 $" --token {token}" +
                 $" -f {bot_server}" +
-                $" -d game_hwid={Generate_ramdom_hwid()}";
+                $" -d game_hwid={Generate_random_hwid()}";
             Process.Start(exe);
         }
-        public int Generate_ramdom_hwid()
+        public int Generate_random_hwid()
         {
             int New_Hwid = HWID_Random.Next(100000000, 999999999);
             return New_Hwid;
