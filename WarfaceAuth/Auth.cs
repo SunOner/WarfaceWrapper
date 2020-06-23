@@ -14,8 +14,8 @@ namespace WarfaceAuth
     public class Auth
     {
         Debug Debug = new Debug();
-        static string login = "";
-        static string password = "";
+        static public string login = "";
+        static public string password = "";
         static string ChannelId = "35";
 
         static CookieContainer authInfo;

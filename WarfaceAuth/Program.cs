@@ -12,7 +12,12 @@ namespace WarfaceAuth
         {
             Auth Auth = new Auth();
 
-            //Auth.Get_State_Cookies();
+            
+            Auth.login = args[0];
+            Auth.password = args[1];
+            
+            Console.WriteLine($"Log:{Auth.login} Pass:{Auth.password}");
+            Auth.Get_State_Cookies();
             Console.ReadLine();
         }
     }
