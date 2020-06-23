@@ -195,7 +195,8 @@ namespace WarfaceAuth
             Match regex_cookie_sdcs = Regex.Match(Cookie_party_helper, "sdcs=([\\s\\S]+?),");
             Cookie_mc = regex_cookie_mc.Groups[1].Value;
             Cookie_sdcs_2 = regex_cookie_sdcs.Groups[1].Value;
-            Get_Eula();
+            //Get_Eula(); // TODO Eula parse ERROR
+            Get_session_key();
         }
 
         public void Get_Eula()
