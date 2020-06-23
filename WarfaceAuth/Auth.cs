@@ -328,6 +328,10 @@ namespace WarfaceAuth
             {
                 Start.Start_Game(uid,token,shardid,server,Program.exe_dir);
             }
+            else
+            {
+                Start.Start_Bot(uid,token,server,Program.exe_dir);
+            }
 
         }
         public static CookieCollection GetAllCookies(CookieContainer cookieJar)

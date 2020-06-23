@@ -9,6 +9,7 @@ namespace WarfaceAuth
 {
     public class Process_Start
     {
+        public Random HWID_Random = new Random();
         public void Start_Game(string uid,string token,string shard_id,string server,string dir)
         {
             Process exe = new Process();
@@ -18,7 +19,38 @@ namespace WarfaceAuth
         }
         public void Start_Bot(string uid,string token,string server,string dir)
         {
-
+            string bot_server = "./cfg/server/ru-alpha.cfg";
+            if(server == "s1.warface.ru")
+            {
+                bot_server = "./cfg/server/ru-alpha.cfg";
+            }
+            if (server == "s2.warface.ru")
+            {
+                bot_server = "./cfg/server/ru-bravo.cfg";
+            }
+            if (server == "s3.warface.ru")
+            {
+                bot_server = "./cfg/server/ru-charlie.cfg";
+            }
+            if (server == "s12.warface.ru")
+            {
+                bot_server = "./cfg/server/ru-delta.cfg";
+            }
+            ProcessStartInfo exe = new ProcessStartInfo();
+            exe.FileName = "C:/windows/system32/cmd.exe";
+            exe.Arguments = $"/c cd /d {Program.exe_dir}" +
+                $" & chcp 65001" +
+                $" & wb.exe" +
+                $" --id {uid}" +
+                $" --token {token}" +
+                $" -f {bot_server}" +
+                $" -d game_hwid={Generate_ramdom_hwid()}";
+            Process.Start(exe);
+        }
+        public int Generate_ramdom_hwid()
+        {
+            int New_Hwid = HWID_Random.Next(100000000, 999999999);
+            return New_Hwid;
         }
     }
 }

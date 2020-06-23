@@ -48,9 +48,7 @@ namespace WarfaceAuth
             }
             exe_dir = args[4];
 
-            Console.WriteLine($"Log:{Auth.login} Pass:{Auth.password}");
             Auth.Get_State_Cookies();
-            Console.ReadLine();
         }
     }
 }
