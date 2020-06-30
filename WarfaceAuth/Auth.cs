@@ -101,17 +101,11 @@ namespace WarfaceAuth
             HttpWebResponse response = (HttpWebResponse)req.GetResponse();
             Debug.Write_debug("Mailru_oauth", response.Headers.ToString());
 
-            Match error_parse = Regex.Match(response.Headers.ToString(), "o2csrf=([\\s\\S]+?);"); //error
+            Match error_parse = Regex.Match(response.Headers.ToString(), "o2csrf=([\\s\\S]+?);");
             if (error_parse.Success == true)
             {
                 Cookie_o2csrf = error_parse.Groups[1].Value;
                 Login_in_mygames();
-            }
-            else
-            {
-                Console.WriteLine("Bad login or password");
-                Console.ReadLine();
-                Environment.Exit(1);
             }
         }
         public void Login_in_mygames()
@@ -333,14 +327,8 @@ namespace WarfaceAuth
             }
             else
             {
-                Clear_cookies();
                 Start.BotStart(uid,token,server,Program.exe_dir);
             }
-        }
-        public void Clear_cookies()
-        {
-
-            
         }
         public static CookieCollection GetAllCookies(CookieContainer cookieJar)
         {
