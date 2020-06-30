@@ -14,6 +14,7 @@ namespace WarfaceAuth
         static void Main(string[] args)
         {
             Auth Auth = new Auth();
+            Debug Debug = new Debug();
             string help_ = "example:\nWarfaceAuth <login> <password> <ru-alpha|ru-bravo|ru-charlie|ru-delta> <g> <F:/mailru/Warface/Bin64Release/Game.exe> (for game) or \nWarfaceAuth <login> <password> <ru-alpha|ru-bravo|ru-charlie|ru-delta> <b> <F:/warfacebot-master/> (for warface bot)";
 
             try
@@ -64,8 +65,8 @@ namespace WarfaceAuth
                 Console.WriteLine($"Need a server..\n{help_}");
                 Console.ReadKey();
             }
-            
-            if(args[3] == "g")
+
+            if (args[3] == "g")
             {
                 Start_game = true;
             }
@@ -82,7 +83,6 @@ namespace WarfaceAuth
                 Console.WriteLine($"Need a dir path..\n{help_}");
                 Console.ReadKey();
             }
-
             Auth.Get_State_Cookies();
         }
     }

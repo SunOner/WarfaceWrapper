@@ -8,7 +8,7 @@ namespace WarfaceAuth
 {
     public class Debug
     {
-        bool Debug_mode = true;
+        public bool Debug_mode = true;
         public void Write_debug(string header, string text)
         {
             if (Debug_mode == true)
