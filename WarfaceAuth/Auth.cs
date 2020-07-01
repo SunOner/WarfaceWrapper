@@ -63,49 +63,56 @@ namespace WarfaceAuth
         }
         public void Mailru_oauth()
         {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://auth.mail.ru/cgi-bin/auth");
-            req.Method = "POST";
-            req.UserAgent = "Downloader/15740";
-            req.Referer = "https://account.mail.ru/login?opener=o2";
-            req.Headers.Add("Origin: https://account.mail.ru");
-            req.ContentType = "Content-Type: application/x-www-form-urlencoded";
-            req.AllowAutoRedirect = true;
-            req.CookieContainer = authInfo;
-            byte[] SomeBytes = null;
-            string FormParams = $"username={login}" +
-                                $"&Login={login}" +
-                                $"&Password={password}" +
-                                $"&password={password}" +
-                                $"&act_token={Cookie_Act}" +
-                                $"&page=https://o2.mail.ru/xlogin?authid=kbjooyiv.dej" +
-                                $"&client_id=bbddb88d19b84a62aedd1ffbc71af201" +
-                                $"&force_us=1" +
-                                $"&from=o2" +
-                                $"&logo_target=_none" +
-                                $"&no_biz=1" +
-                                $"&redirect_uri=https%3A%2F%2Fauth-ac.my.games%2Fsocial%2Fmailru_callback%2F" +
-                                $"&remind_target=_self" +
-                                $"&response_type=code" +
-                                $"&scope=" +
-                                $"&signup_target=_self" +
-                                $"&state={Cookie_State}" +
-                                $"&new_auth_form=1" +
-                                $"&FromAccount=opener=o2" +
-                                $"&twoSteps=1" +
-                                $"&lang=en_US";
-            SomeBytes = Encoding.GetEncoding(1251).GetBytes(FormParams);
-            req.ContentLength = SomeBytes.Length;
-            Stream newStream = req.GetRequestStream();
-            newStream.Write(SomeBytes, 0, SomeBytes.Length);
-            newStream.Close();
-            HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-            Debug.Write_debug("Mailru_oauth", response.Headers.ToString());
-
-            Match error_parse = Regex.Match(response.Headers.ToString(), "o2csrf=([\\s\\S]+?);");
-            if (error_parse.Success == true)
+            try
             {
-                Cookie_o2csrf = error_parse.Groups[1].Value;
-                Login_in_mygames();
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://auth.mail.ru/cgi-bin/auth");
+                req.Method = "POST";
+                req.UserAgent = "Downloader/15740";
+                req.Referer = "https://account.mail.ru/login?opener=o2";
+                req.Headers.Add("Origin: https://account.mail.ru");
+                req.ContentType = "Content-Type: application/x-www-form-urlencoded";
+                req.AllowAutoRedirect = true;
+                req.CookieContainer = authInfo;
+                byte[] SomeBytes = null;
+                string FormParams = $"username={login}" +
+                                    $"&Login={login}" +
+                                    $"&Password={password}" +
+                                    $"&password={password}" +
+                                    $"&act_token={Cookie_Act}" +
+                                    $"&page=https://o2.mail.ru/xlogin?authid=kbjooyiv.dej" +
+                                    $"&client_id=bbddb88d19b84a62aedd1ffbc71af201" +
+                                    $"&force_us=1" +
+                                    $"&from=o2" +
+                                    $"&logo_target=_none" +
+                                    $"&no_biz=1" +
+                                    $"&redirect_uri=https%3A%2F%2Fauth-ac.my.games%2Fsocial%2Fmailru_callback%2F" +
+                                    $"&remind_target=_self" +
+                                    $"&response_type=code" +
+                                    $"&scope=" +
+                                    $"&signup_target=_self" +
+                                    $"&state={Cookie_State}" +
+                                    $"&new_auth_form=1" +
+                                    $"&FromAccount=opener=o2" +
+                                    $"&twoSteps=1" +
+                                    $"&lang=en_US";
+                SomeBytes = Encoding.GetEncoding(1251).GetBytes(FormParams);
+                req.ContentLength = SomeBytes.Length;
+                Stream newStream = req.GetRequestStream();
+                newStream.Write(SomeBytes, 0, SomeBytes.Length);
+                newStream.Close();
+                HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+                Debug.Write_debug("Mailru_oauth", response.Headers.ToString());
+
+                Match error_parse = Regex.Match(response.Headers.ToString(), "o2csrf=([\\s\\S]+?);");
+                if (error_parse.Success == true)
+                {
+                    Cookie_o2csrf = error_parse.Groups[1].Value;
+                    Login_in_mygames();
+                }
+            }
+            catch
+            {
+                Get_State_Cookies();
             }
         }
         public void Login_in_mygames()
