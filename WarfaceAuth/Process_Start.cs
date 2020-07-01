@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,10 +47,11 @@ namespace WarfaceAuth
             };
 
             var proc = Process.Start(PI);
-
             while (!proc.StandardOutput.EndOfStream)
             {
                 string line = proc.StandardOutput.ReadLine();
+                
+                
                 Console.WriteLine(proc.StandardOutput.ReadLine());
                 if (line.Contains("Closed"))
                 {

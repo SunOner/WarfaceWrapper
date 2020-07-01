@@ -117,33 +117,40 @@ namespace WarfaceAuth
         }
         public void Login_in_mygames()
         {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://o2.mail.ru/login");
-            req.Method = "POST";
-            req.UserAgent = "Downloader/15740";
-            req.Referer = "https://o2.mail.ru/xlogin?client_id=bbddb88d19b84a62aedd1ffbc71af201" +
-                "&response_type=code" +
-                "&scope=" +
-                $"&redirect_uri=https%3A%2F%2Fauth-ac.my.games%2Fsocial%2Fmailru_callback%2F&state={Cookie_State}" +
-                $"&no_biz=1" +
-                $"&force_us=1" +
-                $"&signup_target=_self" +
-                $"&remind_target=_self" +
-                $"&logo_target=_none";
-            req.Headers.Add("Origin: https://o2.mail.ru");
-            req.AllowAutoRedirect = true;
-            req.CookieContainer = authInfo;
-            byte[] SomeBytes = null;
-            string FormParams = $"Page=https://o2.mail.ru/login?client_id=bbddb88d19b84a62aedd1ffbc71af201&response_type=code&scope=&redirect_uri=https%3A%2F%2Fauth-ac.my.games%2Fsocial%2Fmailru_callback%2F&state={Cookie_State}&no_biz=1" +
-                $"&FailPage=https://o2.mail.ru/login?client_id=bbddb88d19b84a62aedd1ffbc71af201&response_type=code&scope=&redirect_uri=https%3A%2F%2Fauth-ac.my.games%2Fsocial%2Fmailru_callback%2F&state={Cookie_State}&no_biz=1&fail=1" +
-                $"&login={login}&o2csrf={Cookie_o2csrf}&mode=";
-            SomeBytes = Encoding.GetEncoding(1251).GetBytes(FormParams);
-            req.ContentLength = SomeBytes.Length;
-            Stream newStream = req.GetRequestStream();
-            newStream.Write(SomeBytes, 0, SomeBytes.Length);
-            newStream.Close();
-            HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-            Debug.Write_debug("Login_in_mygames", response.Headers.ToString());
-            Get_SDCS_Cookie();
+            try
+            {
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://o2.mail.ru/login");
+                req.Method = "POST";
+                req.UserAgent = "Downloader/15740";
+                req.Referer = "https://o2.mail.ru/xlogin?client_id=bbddb88d19b84a62aedd1ffbc71af201" +
+                    "&response_type=code" +
+                    "&scope=" +
+                    $"&redirect_uri=https%3A%2F%2Fauth-ac.my.games%2Fsocial%2Fmailru_callback%2F&state={Cookie_State}" +
+                    $"&no_biz=1" +
+                    $"&force_us=1" +
+                    $"&signup_target=_self" +
+                    $"&remind_target=_self" +
+                    $"&logo_target=_none";
+                req.Headers.Add("Origin: https://o2.mail.ru");
+                req.AllowAutoRedirect = true;
+                req.CookieContainer = authInfo;
+                byte[] SomeBytes = null;
+                string FormParams = $"Page=https://o2.mail.ru/login?client_id=bbddb88d19b84a62aedd1ffbc71af201&response_type=code&scope=&redirect_uri=https%3A%2F%2Fauth-ac.my.games%2Fsocial%2Fmailru_callback%2F&state={Cookie_State}&no_biz=1" +
+                    $"&FailPage=https://o2.mail.ru/login?client_id=bbddb88d19b84a62aedd1ffbc71af201&response_type=code&scope=&redirect_uri=https%3A%2F%2Fauth-ac.my.games%2Fsocial%2Fmailru_callback%2F&state={Cookie_State}&no_biz=1&fail=1" +
+                    $"&login={login}&o2csrf={Cookie_o2csrf}&mode=";
+                SomeBytes = Encoding.GetEncoding(1251).GetBytes(FormParams);
+                req.ContentLength = SomeBytes.Length;
+                Stream newStream = req.GetRequestStream();
+                newStream.Write(SomeBytes, 0, SomeBytes.Length);
+                newStream.Close();
+                HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+                Debug.Write_debug("Login_in_mygames", response.Headers.ToString());
+                Get_SDCS_Cookie();
+            }
+            catch
+            {
+                Get_session_key();
+            }
         }
         public void Get_SDCS_Cookie()
         {
