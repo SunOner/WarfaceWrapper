@@ -59,6 +59,7 @@ namespace WarfaceAuth
                 }
             }
             EndWhile:
+            proc.Kill();
             Auth Auth = new Auth();
             Auth.Get_State_Cookies();
         }
