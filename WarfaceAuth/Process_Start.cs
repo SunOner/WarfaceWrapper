@@ -25,6 +25,7 @@ namespace WarfaceAuth
 
         public void BotStart(string uid, string token, string server, string dir)
         {
+            WarfaceAuth.Auth.first_auth = false;
             string bot_server = "./cfg/server/ru-alpha.cfg";
             if (server == "s1.warface.ru") { bot_server = "./cfg/server/ru-alpha.cfg"; }
             if (server == "s2.warface.ru") { bot_server = "./cfg/server/ru-bravo.cfg"; }
@@ -59,6 +60,7 @@ namespace WarfaceAuth
                 }
             }
             EndWhile:
+            proc.CancelOutputRead();
             proc.Kill();
             Auth Auth = new Auth();
             Auth.Get_State_Cookies();

@@ -9,6 +9,9 @@ namespace WarfaceAuth
 {
     public class Program
     {
+        public static bool Debug_mode = true;
+
+
         static public bool Start_game = true;
         static public string exe_dir = "";
         static void Main(string[] args)

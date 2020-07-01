@@ -11,6 +11,7 @@ namespace WarfaceAuth
 {
     public class Auth
     {
+        static public bool first_auth = true;
         Process_Start Start = new Process_Start();
         Debug Debug = new Debug();
         static public string login = "";
@@ -44,7 +45,7 @@ namespace WarfaceAuth
             HttpWebResponse response = (HttpWebResponse)req.GetResponse();
             Match m1 = Regex.Match(response.Headers.ToString(), "state=([\\s\\S]+?)&");
             Cookie_State = m1.Groups[1].Value;
-            Debug.Write_debug("Get_State_Cookies", response.Headers.ToString());
+            Debug.Write_debug("1:Get_State_Cookies > Get_Act_Cookies", response.Headers.ToString());
             Get_Act_Cookies();
         }
         public void Get_Act_Cookies()
@@ -58,7 +59,7 @@ namespace WarfaceAuth
             HttpWebResponse response = (HttpWebResponse)req.GetResponse();
             Match m1 = Regex.Match(response.Headers.ToString(), "act=([\\s\\S]+?);");
             Cookie_Act = m1.Groups[1].Value;
-            Debug.Write_debug("Get_Act_Cookies", response.Headers.ToString());
+            Debug.Write_debug("2:Get_Act_Cookies > Mailru_oauth", response.Headers.ToString());
             Mailru_oauth();
         }
         public void Mailru_oauth()
@@ -70,7 +71,7 @@ namespace WarfaceAuth
                 req.UserAgent = "Downloader/15740";
                 req.Referer = "https://account.mail.ru/login?opener=o2";
                 req.Headers.Add("Origin: https://account.mail.ru");
-                req.ContentType = "Content-Type: application/x-www-form-urlencoded";
+                req.ContentType = "application/x-www-form-urlencoded";
                 req.AllowAutoRedirect = true;
                 req.CookieContainer = authInfo;
                 byte[] SomeBytes = null;
@@ -101,7 +102,7 @@ namespace WarfaceAuth
                 newStream.Write(SomeBytes, 0, SomeBytes.Length);
                 newStream.Close();
                 HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-                Debug.Write_debug("Mailru_oauth", response.Headers.ToString());
+                Debug.Write_debug("3:Mailru_oauth > Login_in_mygames", response.Headers.ToString());
 
                 Match error_parse = Regex.Match(response.Headers.ToString(), "o2csrf=([\\s\\S]+?);");
                 if (error_parse.Success == true)
@@ -112,6 +113,7 @@ namespace WarfaceAuth
             }
             catch
             {
+                Debug.Write_debug("3:Mailru_oauth > Get_State_Cookies");
                 Get_State_Cookies();
             }
         }
@@ -123,14 +125,14 @@ namespace WarfaceAuth
                 req.Method = "POST";
                 req.UserAgent = "Downloader/15740";
                 req.Referer = "https://o2.mail.ru/xlogin?client_id=bbddb88d19b84a62aedd1ffbc71af201" +
-                    "&response_type=code" +
-                    "&scope=" +
-                    $"&redirect_uri=https%3A%2F%2Fauth-ac.my.games%2Fsocial%2Fmailru_callback%2F&state={Cookie_State}" +
-                    $"&no_biz=1" +
-                    $"&force_us=1" +
-                    $"&signup_target=_self" +
-                    $"&remind_target=_self" +
-                    $"&logo_target=_none";
+                             "&response_type=code" +
+                             "&scope=" +
+                              $"&redirect_uri=https%3A%2F%2Fauth-ac.my.games%2Fsocial%2Fmailru_callback%2F&state={Cookie_State}" +
+                             "&no_biz=1" +
+                             "&force_us=1" +
+                             "&signup_target=_self" +
+                             "&remind_target=_self" +
+                             "&logo_target=_none";
                 req.Headers.Add("Origin: https://o2.mail.ru");
                 req.AllowAutoRedirect = true;
                 req.CookieContainer = authInfo;
@@ -144,11 +146,12 @@ namespace WarfaceAuth
                 newStream.Write(SomeBytes, 0, SomeBytes.Length);
                 newStream.Close();
                 HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-                Debug.Write_debug("Login_in_mygames", response.Headers.ToString());
+                Debug.Write_debug("4:Login_in_mygames > Get_SDCS_Cookie", response.Headers.ToString());
                 Get_SDCS_Cookie();
             }
             catch
             {
+                Debug.Write_debug("4:Login_in_mygames > Get_session_key");
                 Get_session_key();
             }
         }
@@ -162,7 +165,7 @@ namespace WarfaceAuth
             req.AllowAutoRedirect = true;
             req.CookieContainer = authInfo;
             HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-            Debug.Write_debug("Get_SDCS_Cookie", response.Headers.ToString());
+            Debug.Write_debug("5:Get_SDCS_Cookie > Login_mygames", response.Headers.ToString());
             Match m1 = Regex.Match(response.Headers.ToString(), "sdcs=([\\s\\S]+?);");
             Cookie_SDCS = m1.Groups[1].Value;
             Login_mygames();
@@ -189,14 +192,14 @@ namespace WarfaceAuth
                 newStream.Write(SomeBytes, 0, SomeBytes.Length);
                 newStream.Close();
                 HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-                Debug.Write_debug("Login_mygames", response.Headers.ToString());
+                Debug.Write_debug("6:Login_mygames > Get_session_key", response.Headers.ToString());
                 Cookie_party = GetAllCookies(authInfo);
 
                 foreach (Cookie cookie in Cookie_party)
                 {
                     Cookie_party_helper += string.Join(".", "," + cookie.ToString()); //BRUH
-                    Debug.Write_debug("Debug cookie...", cookie.ToString());
                 }
+                Debug.Write_debug("Debug cookie...", Cookie_party_helper);
                 Match regex_cookie_mc = Regex.Match(Cookie_party_helper, "mc=([\\s\\S]+?),");
                 Match regex_cookie_sdcs = Regex.Match(Cookie_party_helper, "sdcs=([\\s\\S]+?),");
                 Cookie_mc = regex_cookie_mc.Groups[1].Value;
@@ -205,6 +208,7 @@ namespace WarfaceAuth
             }
             catch
             {
+                Debug.Write_debug("6:Login_mygames > Get_Eula");
                 Get_Eula();
             }
         }
@@ -219,6 +223,7 @@ namespace WarfaceAuth
             Stream newStream = req.GetRequestStream();
             newStream.Close();
             HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+            Debug.Write_debug("7:Get_Eula", response.Headers.ToString());
 
             Stream stream = response.GetResponseStream();
             StreamReader reader = new StreamReader(stream);
@@ -243,6 +248,7 @@ namespace WarfaceAuth
             newStream.Write(SomeBytes, 0, SomeBytes.Length);
             newStream.Close();
             HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+            Debug.Write_debug("8:Csrfmiddleware_femboy > Get_session_key", response.Headers.ToString());
 
             Stream stream = response.GetResponseStream();
             StreamReader reader = new StreamReader(stream);
@@ -263,6 +269,7 @@ namespace WarfaceAuth
             newStream.Write(SomeBytes, 0, SomeBytes.Length);
             newStream.Close();
             HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+            Debug.Write_debug("9:Get_session_key > Get_RedirectUrl", response.Headers.ToString());
 
             Stream stream = response.GetResponseStream();
             StreamReader reader = new StreamReader(stream);
@@ -280,7 +287,7 @@ namespace WarfaceAuth
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://authdl.my.games/gem.php?hint=Portal");
                 req.Method = "POST";
                 req.UserAgent = "Downloader/15740";
-                req.AllowAutoRedirect = true;
+                req.AllowAutoRedirect = false;
                 byte[] SomeBytes = null;
                 string FormParams = $"<?xml version='1.0' encoding='UTF-8'?><Portal SessionKey='{session_key}' Url='http://authdl.my.games/robots.txt'/>";
                 SomeBytes = Encoding.GetEncoding(1251).GetBytes(FormParams);
@@ -289,6 +296,7 @@ namespace WarfaceAuth
                 newStream.Write(SomeBytes, 0, SomeBytes.Length);
                 newStream.Close();
                 HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+                Debug.Write_debug("10:Get_RedirectUrl > Include_session", response.Headers.ToString());
 
                 Stream stream = response.GetResponseStream();
                 StreamReader reader = new StreamReader(stream);
@@ -298,8 +306,9 @@ namespace WarfaceAuth
                 RedirectUrl = m1.Groups[1].Value;
                 Include_session();
             }
-            catch
+            catch(Exception ex)
             {
+                Debug.Write_debug("10:Get_RedirectUrl > Get_State_Cookies", ex.Message);
                 Get_State_Cookies();
             }
         }
@@ -310,9 +319,10 @@ namespace WarfaceAuth
             req.UserAgent = "Downloader/15740";
             req.AllowAutoRedirect = true;
             req.CookieContainer = authInfo;
-            Get_user_if_and_token();
+            Debug.Write_debug("11:Include_session > Get_user_id_and_token");
+            Get_user_id_and_token();
         }
-        public void Get_user_if_and_token()
+        public void Get_user_id_and_token()
         {
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://authdl.my.games/gem.php?hint=Login");
             req.Method = "POST";
@@ -327,6 +337,7 @@ namespace WarfaceAuth
             newStream.Write(SomeBytes, 0, SomeBytes.Length);
             newStream.Close();
             HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+            Debug.Write_debug("12:Get_user_id_and_token > Start Process", response.Headers.ToString());
 
             Stream stream = response.GetResponseStream();
             StreamReader reader = new StreamReader(stream);
@@ -334,13 +345,15 @@ namespace WarfaceAuth
             Match m1 = Regex.Match(temp_page, "Code=\"([\\s\\S]+?)\".GameAccount=\"([\\s\\S]+?)\".PersId=\"([\\s\\S]+?)\".MRACToken=\"([\\s\\S]+?)\"");
             string token = m1.Groups[1].Value;
             string uid = m1.Groups[2].Value;
-            Debug.Write_debug("Responce start params",$"Token:{m1.Groups[1].Value}\nUid:{m1.Groups[2].Value}\nPersId:{m1.Groups[3].Value}\nMRACToken:{m1.Groups[4].Value}\n");
+            Debug.Write_debug("Responce start params",$"Token:{m1.Groups[1].Value}\nUid:{m1.Groups[2].Value}\nPersId:{m1.Groups[3].Value}\nMRACToken:{m1.Groups[4].Value}");
             if(Program.Start_game == true)
             {
+                Debug.Write_debug("Starting Game...");
                 Start.Start_Game(uid,token,shardid,server,Program.exe_dir);
             }
             else
             {
+                Debug.Write_debug("Starting WB...");
                 Start.BotStart(uid,token,server,Program.exe_dir);
             }
         }
