@@ -17,10 +17,17 @@ namespace WarfaceAuth
         
         public void Start_Game(string uid,string token,string shard_id,string server,string dir)
         {
-            Process exe = new Process();
-            exe.StartInfo.FileName = dir;
-            exe.StartInfo.Arguments = $" -region_id global --shard_id={shard_id} -onlineserver {server} -uid {uid} -token {token}";
-            exe.Start();
+            try
+            {
+                Process exe = new Process();
+                exe.StartInfo.FileName = dir + "Game.exe";
+                exe.StartInfo.Arguments = $" -region_id global --shard_id={shard_id} -onlineserver {server} -uid {uid} -token {token}";
+                exe.Start();
+            }
+            catch
+            {
+                Console.WriteLine("File Game.exe not found!");
+            }
         }
 
         public void BotStart(string uid, string token, string server, string dir)
@@ -51,7 +58,6 @@ namespace WarfaceAuth
             while (!proc.StandardOutput.EndOfStream)
             {
                 string line = proc.StandardOutput.ReadLine();
-                
                 
                 Console.WriteLine(proc.StandardOutput.ReadLine());
                 if (line.Contains("Closed"))

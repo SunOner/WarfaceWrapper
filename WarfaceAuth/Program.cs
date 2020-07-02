@@ -18,8 +18,7 @@ namespace WarfaceAuth
         {
             Auth Auth = new Auth();
             Debug Debug = new Debug();
-            string help_ = "example:\nWarfaceAuth <login> <password> <ru-alpha|ru-bravo|ru-charlie|ru-delta> <g> <F:/mailru/Warface/Bin64Release/Game.exe> (for game) or \nWarfaceAuth <login> <password> <ru-alpha|ru-bravo|ru-charlie|ru-delta> <b> <F:/warfacebot-master/> (for warface bot)";
-
+            string help_ = "example:\nWarfaceAuth <login> <password> <ru-alpha|ru-bravo|ru-charlie|ru-delta> <g> <F:/Warface/Bin64Release/> (for game) or \nWarfaceAuth <login> <password> <ru-alpha|ru-bravo|ru-charlie|ru-delta> <b> <F:/warfacebot-master/> (for warface bot)";
             try
             {
                 Auth.login = args[0];

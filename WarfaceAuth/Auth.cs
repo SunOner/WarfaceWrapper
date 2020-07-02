@@ -6,6 +6,7 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace WarfaceAuth
 {
@@ -110,6 +111,12 @@ namespace WarfaceAuth
                     Cookie_o2csrf = error_parse.Groups[1].Value;
                     Login_in_mygames();
                 }
+                else
+                {
+                    Console.WriteLine("Bad login or password!");
+                    Console.ReadLine();
+                    Environment.Exit(1);
+                }
             }
             catch
             {
@@ -125,14 +132,14 @@ namespace WarfaceAuth
                 req.Method = "POST";
                 req.UserAgent = "Downloader/15740";
                 req.Referer = "https://o2.mail.ru/xlogin?client_id=bbddb88d19b84a62aedd1ffbc71af201" +
-                             "&response_type=code" +
-                             "&scope=" +
-                              $"&redirect_uri=https%3A%2F%2Fauth-ac.my.games%2Fsocial%2Fmailru_callback%2F&state={Cookie_State}" +
-                             "&no_biz=1" +
-                             "&force_us=1" +
-                             "&signup_target=_self" +
-                             "&remind_target=_self" +
-                             "&logo_target=_none";
+                              "&response_type=code" +
+                              "&scope=" +
+                               $"&redirect_uri=https%3A%2F%2Fauth-ac.my.games%2Fsocial%2Fmailru_callback%2F&state={Cookie_State}" +
+                              "&no_biz=1" +
+                              "&force_us=1" +
+                              "&signup_target=_self" +
+                              "&remind_target=_self" +
+                              "&logo_target=_none";
                 req.Headers.Add("Origin: https://o2.mail.ru");
                 req.AllowAutoRedirect = true;
                 req.CookieContainer = authInfo;
