@@ -12,7 +12,6 @@ namespace WarfaceAuth
 {
     public class Auth
     {
-        static public bool first_auth = true;
         Process_Start Start = new Process_Start();
         Debug Debug = new Debug();
         static public string login = "";
@@ -45,9 +44,13 @@ namespace WarfaceAuth
             req.CookieContainer = authInfo;
             HttpWebResponse response = (HttpWebResponse)req.GetResponse();
             Match m1 = Regex.Match(response.Headers.ToString(), "state=([\\s\\S]+?)&");
-            Cookie_State = m1.Groups[1].Value;
-            Debug.Write_debug("1:Get_State_Cookies > Get_Act_Cookies", response.Headers.ToString());
-            Get_Act_Cookies();
+            if(m1.Success == true)
+            {
+                Cookie_State = m1.Groups[1].Value;
+                Debug.Write_debug("1:Get_State_Cookies > Get_Act_Cookies", response.Headers.ToString());
+                response.Close();
+                Get_Act_Cookies();
+            }
         }
         public void Get_Act_Cookies()
         {
@@ -61,6 +64,7 @@ namespace WarfaceAuth
             Match m1 = Regex.Match(response.Headers.ToString(), "act=([\\s\\S]+?);");
             Cookie_Act = m1.Groups[1].Value;
             Debug.Write_debug("2:Get_Act_Cookies > Mailru_oauth", response.Headers.ToString());
+            response.Close();
             Mailru_oauth();
         }
         public void Mailru_oauth()
@@ -109,10 +113,12 @@ namespace WarfaceAuth
                 if (error_parse.Success == true)
                 {
                     Cookie_o2csrf = error_parse.Groups[1].Value;
+                    response.Close();
                     Login_in_mygames();
                 }
                 else
                 {
+                    response.Close();
                     Console.WriteLine("Bad login or password!");
                     Console.ReadLine();
                     Environment.Exit(1);
@@ -120,7 +126,7 @@ namespace WarfaceAuth
             }
             catch
             {
-                Debug.Write_debug("3:Mailru_oauth > Get_State_Cookies");
+                Debug.Write_debug("3:Mailru_oauth > Get_State_Cookies (RESTART)");
                 Get_State_Cookies();
             }
         }
@@ -154,11 +160,12 @@ namespace WarfaceAuth
                 newStream.Close();
                 HttpWebResponse response = (HttpWebResponse)req.GetResponse();
                 Debug.Write_debug("4:Login_in_mygames > Get_SDCS_Cookie", response.Headers.ToString());
+                response.Close();
                 Get_SDCS_Cookie();
             }
             catch
             {
-                Debug.Write_debug("4:Login_in_mygames > Get_session_key");
+                Debug.Write_debug("4:Login_in_mygames > Get_session_key (RESTART)");
                 Get_session_key();
             }
         }
@@ -175,6 +182,7 @@ namespace WarfaceAuth
             Debug.Write_debug("5:Get_SDCS_Cookie > Login_mygames", response.Headers.ToString());
             Match m1 = Regex.Match(response.Headers.ToString(), "sdcs=([\\s\\S]+?);");
             Cookie_SDCS = m1.Groups[1].Value;
+            response.Close();
             Login_mygames();
         }
         public void Login_mygames()
@@ -211,10 +219,13 @@ namespace WarfaceAuth
                 Match regex_cookie_sdcs = Regex.Match(Cookie_party_helper, "sdcs=([\\s\\S]+?),");
                 Cookie_mc = regex_cookie_mc.Groups[1].Value;
                 Cookie_party_helper = "";
+                response.Close();
                 Get_session_key();
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine(ex.ToString());
+                Console.ReadLine();
                 Debug.Write_debug("6:Login_mygames > Get_Eula");
                 Get_Eula();
             }
@@ -238,6 +249,7 @@ namespace WarfaceAuth
 
             Match m1 = Regex.Match(temp_page, "\"token\":\"([\\s\\S]+?)\"");
             csrfmiddlewaretoken_jwt = m1.Groups[1].Value;
+            response.Close();
             Csrfmiddleware_femboy();
         }
         public void Csrfmiddleware_femboy()
@@ -259,6 +271,7 @@ namespace WarfaceAuth
 
             Stream stream = response.GetResponseStream();
             StreamReader reader = new StreamReader(stream);
+            response.Close();
             Get_session_key();
         }
         public void Get_session_key()
@@ -285,6 +298,7 @@ namespace WarfaceAuth
             Match m1 = Regex.Match(temp_page, "SessionKey=\"([\\s\\S]+?)\"");
             session_key = m1.Groups[1].Value;
 
+            response.Close();
             Get_RedirectUrl();
         }
         public void Get_RedirectUrl()
@@ -311,6 +325,7 @@ namespace WarfaceAuth
 
                 Match m1 = Regex.Match(temp_page, "RedirectUrl=\"([\\s\\S]+?)&amp");
                 RedirectUrl = m1.Groups[1].Value;
+                response.Close();
                 Include_session();
             }
             catch(Exception ex)
@@ -353,6 +368,7 @@ namespace WarfaceAuth
             string token = m1.Groups[1].Value;
             string uid = m1.Groups[2].Value;
             Debug.Write_debug("Responce start params",$"Token:{m1.Groups[1].Value}\nUid:{m1.Groups[2].Value}\nPersId:{m1.Groups[3].Value}\nMRACToken:{m1.Groups[4].Value}");
+            response.Close();
             if(Program.Start_game == true)
             {
                 Debug.Write_debug("Starting Game...");

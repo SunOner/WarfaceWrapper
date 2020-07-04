@@ -28,7 +28,7 @@ namespace WarfaceAuth
                 Console.WriteLine($"Need a login..\n{help_}");
                 Console.ReadKey();
             }
-
+            
             try
             {
                 Auth.password = args[1];
@@ -38,7 +38,7 @@ namespace WarfaceAuth
                 Console.WriteLine($"Need a password..\n{help_}");
                 Console.ReadKey();
             }
-
+            
             try
             {
                 if (args[2] == "ru-alpha")
@@ -67,7 +67,7 @@ namespace WarfaceAuth
                 Console.WriteLine($"Need a server..\n{help_}");
                 Console.ReadKey();
             }
-
+            
             if (args[3] == "g")
             {
                 Start_game = true;
