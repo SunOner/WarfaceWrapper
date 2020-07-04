@@ -7,13 +7,13 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WarfaceAuth
+namespace WarfaceWrapper
 {
     public class Process_Start
     {
         Random HWID_Random = new Random();
         ProcessStartInfo PI;
-        Debug Debug = new Debug();
+        //Debug Debug = new Debug();
         
         public void Start_Game(string uid,string token,string shard_id,string server,string dir)
         {

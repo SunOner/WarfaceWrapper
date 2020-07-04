@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WarfaceAuth
+namespace WarfaceWrapper
 {
     public class Program
     {
@@ -17,7 +17,6 @@ namespace WarfaceAuth
         static void Main(string[] args)
         {
             Auth Auth = new Auth();
-            Debug Debug = new Debug();
             string help_ = "example:\nWarfaceAuth <login> <password> <ru-alpha|ru-bravo|ru-charlie|ru-delta> <g> <F:/Warface/Bin64Release/> (for game) or \nWarfaceAuth <login> <password> <ru-alpha|ru-bravo|ru-charlie|ru-delta> <b> <F:/warfacebot-master/> (for warface bot)";
             try
             {

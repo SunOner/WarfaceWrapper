@@ -6,9 +6,9 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
+using WarfaceAuth;
 
-namespace WarfaceAuth
+namespace WarfaceWrapper
 {
     public class Auth
     {
@@ -222,10 +222,8 @@ namespace WarfaceAuth
                 response.Close();
                 Get_session_key();
             }
-            catch(Exception ex)
+            catch
             {
-                Console.WriteLine(ex.ToString());
-                Console.ReadLine();
                 Debug.Write_debug("6:Login_mygames > Get_Eula");
                 Get_Eula();
             }
