@@ -14,10 +14,12 @@ namespace WarfaceWrapper
 
         static public bool Start_game = true;
         static public string exe_dir = "";
+
+        
         static void Main(string[] args)
         {
             Auth Auth = new Auth();
-            string help_ = "example:\nWarfaceAuth <login> <password> <ru-alpha|ru-bravo|ru-charlie|ru-delta> <g> <F:/Warface/Bin64Release/> (for game) or \nWarfaceAuth <login> <password> <ru-alpha|ru-bravo|ru-charlie|ru-delta> <b> <F:/warfacebot-master/> (for warface bot)";
+            string help_ = "Game example:\nWarfaceWrapper login password ru-alpha|ru-bravo|ru-charlie|ru-delta g F:/Warface/Bin64Release/\n\nBot example:\nWarfaceWrapper login password ru-alpha|ru-bravo|ru-charlie|ru-delta b F:/warfacebot-master/";
             try
             {
                 Auth.login = args[0];
@@ -66,15 +68,24 @@ namespace WarfaceWrapper
                 Console.WriteLine($"Need a server..\n{help_}");
                 Console.ReadKey();
             }
-            
-            if (args[3] == "g")
+
+            try
             {
-                Start_game = true;
+                if (args[3] == "g")
+                {
+                    Start_game = true;
+                }
+                if (args[3] == "b")
+                {
+                    Start_game = false;
+                }
             }
-            if (args[3] == "b")
+            catch
             {
-                Start_game = false;
+                Console.WriteLine("What you launch?\ng - game\nb - bot");
+                Console.ReadLine();
             }
+
             try
             {
                 exe_dir = args[4];

@@ -18,7 +18,6 @@ namespace WarfaceAuth
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine(text);
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("************************************************************************************************************************");
             }
         }
     }

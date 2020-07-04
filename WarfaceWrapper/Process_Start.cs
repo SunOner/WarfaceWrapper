@@ -13,8 +13,6 @@ namespace WarfaceWrapper
     {
         Random HWID_Random = new Random();
         ProcessStartInfo PI;
-        //Debug Debug = new Debug();
-        
         public void Start_Game(string uid,string token,string shard_id,string server,string dir)
         {
             try
@@ -27,6 +25,7 @@ namespace WarfaceWrapper
             catch
             {
                 Console.WriteLine("File Game.exe not found!");
+                Console.ReadLine();
             }
         }
 
@@ -49,6 +48,7 @@ namespace WarfaceWrapper
                 $" --token {token}" +
                 $" -f {bot_server}" +
                 $" -d game_hwid={HWID_Random.Next(100000000, 999999999)}",
+                StandardOutputEncoding = Encoding.GetEncoding(866),
                 RedirectStandardOutput = true,
                 UseShellExecute = false
             };
@@ -56,13 +56,23 @@ namespace WarfaceWrapper
             var proc = Process.Start(PI);
             while (!proc.StandardOutput.EndOfStream)
             {
-                string line = proc.StandardOutput.ReadLine();
-                
-                Console.WriteLine(proc.StandardOutput.ReadLine());
+                string line = proc.StandardOutput.ReadLine() + " endl";
+
+                #region Contains
+
+                Match wb_nickname = Regex.Match(line, "Nickname: ([\\s\\S]+?) endl");
+                if(wb_nickname.Success == true)
+                {
+                    string nickname = wb_nickname.Groups[1].Value;
+                }
+
+                #endregion
+
                 if (line.Contains("Closed"))
                 {
                     goto EndWhile;
                 }
+                Console.WriteLine(line);
             }
             EndWhile:
             proc.CancelOutputRead();
