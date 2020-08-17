@@ -52,7 +52,7 @@ namespace WarfaceWrapper
             var proc = Process.Start(PI);
             while (!proc.StandardOutput.EndOfStream)
             {
-                string line = proc.StandardOutput.ReadLine() + " endl";
+                string line = proc.StandardOutput.ReadLine();
 
                 #region Contains
 
