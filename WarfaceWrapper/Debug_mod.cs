@@ -3,7 +3,7 @@ using WarfaceWrapper;
 
 namespace WarfaceAuth
 {
-    public class Debug
+    public class Debug_mod
     {
         public void Write_debug(string header, string text = "")
         {
@@ -15,6 +15,10 @@ namespace WarfaceAuth
                 Console.WriteLine(text);
                 Console.ForegroundColor = ConsoleColor.White;
             }
+        }
+        public void Write_NonDebug(string text = "")
+        {
+            Console.WriteLine($"{text}");
         }
     }
 }
