@@ -52,7 +52,7 @@ namespace WarfaceWrapper
             Writer = proc.StandardInput;
             while (!proc.StandardOutput.EndOfStream)
             {
-                string[] line = proc.StandardOutput.ReadLine().Replace("[1;31m", string.Empty).Replace("[0m",string.Empty).Replace("CMD# ", string.Empty).Split(' ');
+                string[] line = new Regex(@"\x1B\[[^@-~]*[@-~]|CMD#\s*").Replace(proc.StandardOutput.ReadLine(), "").Split(' ');
                 switch(line[0])
                 {
                     case "Closed":
